@@ -2,13 +2,13 @@ name: Deploy
 
 on:
   push:
-    branchs: 
+    branches: 
       - main
 
   workflow_dispatch:
 
 permissions:
-  content: read
+  contents: read
   pages: write
   id-token: write
 
@@ -20,40 +20,38 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Install .NET Wasm Tools
-      run: dotnet workload install wasm-tools
+      - name: Install .NET Wasm Tools
+        run: dotnet workload install wasm-tools
 
-    - name: Restore Dependencies
-      run: dotmnet Restore
+      - name: Restore Dependencies
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build -c Release --no-Restore
+      - name: Build
+        run: dotnet build -c Release --no-restore
 
-    - name: Publish .NET
-      run: dotnet publish PWAProject.csproj -c:Release -o docs --nologo
+      - name: Publish .NET
+        run: dotnet publish PWAProject.csproj -c Release -o docs --nologo
 
-    - name: Setup pages
-      uses: actions/configure-pages@v4
+      - name: Setup pages
+        uses: actions/configure-pages@v4
 
-    - name: Upload
-      uses: actions/upload-pages-artifact@v3
+      - name: Upload
+        uses: actions/upload-pages-artifact@v3
         with: 
           path: 'docs/wwwroot'
-          
-    - name: Deploy
-      id: deployment
-      uses: actions/deploy-pages
 
 
-      name: Deploy
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v1
