@@ -2,8 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: 
-      - main
+    branchs: ["main"]
 
   workflow_dispatch:
 
@@ -31,6 +30,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+
       - name: Install .NET Wasm Tools
         run: dotnet workload install wasm-tools
 
@@ -41,16 +41,16 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Publish .NET
-        run: dotnet publish PWAProject.csproj -c Release -o docs --nologo
+        run: dotnet publish BlazorDeploy.csproj -c:Release -o docs --nologo
 
-      - name: Setup pages
+      - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload
         uses: actions/upload-pages-artifact@v3
-        with: 
-          path: 'docs'
+        with:
+          path: 'docs/wwwroot'
 
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
