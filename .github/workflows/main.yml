@@ -3,7 +3,6 @@ name: Deploy
 on:
   push:
     branchs: ["main"]
-
   workflow_dispatch:
 
 permissions:
